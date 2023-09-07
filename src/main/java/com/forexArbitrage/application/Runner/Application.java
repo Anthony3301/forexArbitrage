@@ -11,21 +11,15 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan(basePackages = "com.forexArbitrage.application")
 public class Application {
 	@Autowired
-	CurrencyVerifier currVer;
+	Runner runner;
 
 	public static void main(String[] args) {
 
 		SpringApplication.run(Application.class, args);
-		System.out.println("intial setup");
 	}
 
 	@PostConstruct
 	public void runAfterStartup() {
-		System.out.println("Loading all currencies...");
-		if (currVer.getCurrencyCache()) {
-			System.out.println("Moving on!");
-		} else {
-			System.out.println("Failed to load currencies.");
-		}
+		runner.run();
 	}
 }

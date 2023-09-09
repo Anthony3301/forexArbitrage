@@ -10,9 +10,9 @@ import java.net.URL;
 @Component
 public class RestCall {
     private static HttpURLConnection connection;
-    private StringBuffer response = new StringBuffer();
 
     public String jsonToStringAPI(String http) {
+        StringBuffer response = new StringBuffer();
         try {
             URL url = new URL(http);
             connection = (HttpURLConnection) url.openConnection();

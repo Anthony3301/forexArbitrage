@@ -1,5 +1,7 @@
 package com.forexArbitrage.application.apiAccess;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,5 +19,14 @@ public class CurrencyAccess {
         response = restCall.jsonToStringAPI(http);
 
         System.out.println(response);
+    }
+
+    public ExchangeRates parseJson() throws JsonProcessingException {
+        ExchangeRates exchangeRates = new ObjectMapper().readerFor(ExchangeRates.class).readValue(response);
+
+        System.out.println("base currency of exchanges is " + exchangeRates.getBase());
+        System.out.println("loaded exchange rates of " + exchangeRates.getRates().size() + " currencies");
+
+        return exchangeRates;
     }
 }

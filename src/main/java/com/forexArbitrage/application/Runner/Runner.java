@@ -44,6 +44,7 @@ public class Runner {
             if (isValid) {
                 // call currency exchange rate api
                 currencyAccess.loadCurrencyRates();
+                currencyAccess.parseJson();
             }
 
 

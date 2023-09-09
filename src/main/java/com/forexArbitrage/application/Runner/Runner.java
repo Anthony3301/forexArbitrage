@@ -1,5 +1,6 @@
 package com.forexArbitrage.application.Runner;
 
+import com.forexArbitrage.application.apiAccess.CurrencyAccess;
 import com.forexArbitrage.application.verification.CurrencyVerifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,6 +12,9 @@ import java.util.*;
 public class Runner {
     @Autowired
     CurrencyVerifier currVer;
+
+    @Autowired
+    CurrencyAccess currencyAccess;
 
     public void run() {
         try {
@@ -38,7 +42,8 @@ public class Runner {
             }
 
             if (isValid) {
-                // call currency api here
+                // call currency exchange rate api
+                currencyAccess.loadCurrencyRates();
             }
 
 

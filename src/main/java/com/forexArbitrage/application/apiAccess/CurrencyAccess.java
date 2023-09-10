@@ -15,18 +15,23 @@ public class CurrencyAccess {
     private String http = String.format("http://api.exchangeratesapi.io/v1/latest?access_key=%s", APIkey);
     private String response;
 
-    public void loadCurrencyRates() {
+    private void loadCurrencyRates() {
         response = restCall.jsonToStringAPI(http);
 
         System.out.println(response);
     }
 
-    public ExchangeRates parseJson() throws JsonProcessingException {
+    private ExchangeRates parseJson() throws JsonProcessingException {
         ExchangeRates exchangeRates = new ObjectMapper().readerFor(ExchangeRates.class).readValue(response);
 
         System.out.println("base currency of exchanges is " + exchangeRates.getBase());
         System.out.println("loaded exchange rates of " + exchangeRates.getRates().size() + " currencies");
 
         return exchangeRates;
+    }
+
+    public ExchangeRates getExchangeRates() throws JsonProcessingException {
+        loadCurrencyRates();
+        return parseJson();
     }
 }

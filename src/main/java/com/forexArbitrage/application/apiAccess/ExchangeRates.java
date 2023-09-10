@@ -32,4 +32,12 @@ public class ExchangeRates {
     public void setRates(Map<String, Float> rates) {
         this.rates = rates;
     }
+
+    public Float getSpecificRate(String currency) {
+        if (this.rates.containsKey(currency)) {
+            return this.rates.get(currency);
+        }
+
+        return Float.MIN_VALUE;
+    }
 }

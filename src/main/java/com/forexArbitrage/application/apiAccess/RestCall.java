@@ -6,10 +6,13 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.logging.Logger;
 
 @Component
 public class RestCall {
     private static HttpURLConnection connection;
+
+    private static final Logger logger = Logger.getLogger(RestCall.class.getName());
 
     public String jsonToStringAPI(String http) {
         StringBuffer response = new StringBuffer();
@@ -20,7 +23,7 @@ public class RestCall {
             connection.setReadTimeout(2000);
 
             int status = connection.getResponseCode();
-            System.out.println("API connection code is " + status);
+            logger.info("API connection code is " + status);
 
             if (status >= 0) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -34,7 +37,7 @@ public class RestCall {
             return response.toString();
 
         } catch (Exception e) {
-            System.out.println("Malformed API URL or improper usage");
+            logger.info("Malformed API URL or improper usage");
             e.printStackTrace();
             return "ERROR";
         }

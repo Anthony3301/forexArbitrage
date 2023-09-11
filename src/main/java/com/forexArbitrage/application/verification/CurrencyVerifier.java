@@ -12,12 +12,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Logger;
 
 @Component
 public class CurrencyVerifier {
     @Autowired
     RestCall restCall;
 
+    private static final Logger logger = Logger.getLogger(CurrencyVerifier.class.getName());
 
     // utilities for reading the api for currencies
     private String apiVersion = "cbb41bd8ff49f43f98a68d9a4e0ff88947a07e97";
@@ -43,7 +45,7 @@ public class CurrencyVerifier {
             TypeReference<HashMap<String, String>> typeReference = new TypeReference<HashMap<String, String>>(){};
             currencies = objectMapper.readValue(response.toString(), typeReference);
 
-            System.out.printf("Loaded %d currencies!%n", currencies.size());
+            logger.info(String.format("Loaded %d currencies!%n", currencies.size()));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         } catch (Exception e) {

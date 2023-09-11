@@ -5,10 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.logging.Logger;
+
 @Component
 public class CurrencyAccess {
     @Autowired
     RestCall restCall;
+
+    private static final Logger logger = Logger.getLogger(CurrencyModel.class.getName());
 
     // currency api access here
     private String APIkey = "704b65463e4eb7ecbe22f4ef3534e17b";
@@ -24,8 +28,8 @@ public class CurrencyAccess {
     private ExchangeRates parseJson() throws JsonProcessingException {
         ExchangeRates exchangeRates = new ObjectMapper().readerFor(ExchangeRates.class).readValue(response);
 
-        System.out.println("base currency of exchanges is " + exchangeRates.getBase());
-        System.out.println("loaded exchange rates of " + exchangeRates.getRates().size() + " currencies");
+        logger.info("base currency of exchanges is " + exchangeRates.getBase());
+        logger.info("loaded exchange rates of " + exchangeRates.getRates().size() + " currencies");
 
         return exchangeRates;
     }

@@ -22,7 +22,6 @@ public class CurrencyVerifier {
     private static final Logger logger = Logger.getLogger(CurrencyVerifier.class.getName());
 
     // utilities for reading the api for currencies
-    private String apiVersion = "cbb41bd8ff49f43f98a68d9a4e0ff88947a07e97";
     private String date = "latest";
     private String endPoint = "currencies";
     private String response;
@@ -31,7 +30,7 @@ public class CurrencyVerifier {
     private HashMap<String, String> currencies;
 
     // API call to cache of all valid currencies worldwide
-    private void loadCurrencies() {
+    private void loadCurrencies(String apiVersion) {
         String httpRequest = String.format("https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@%s/%s/%s.json",
                 apiVersion, date, endPoint);
 
@@ -54,9 +53,9 @@ public class CurrencyVerifier {
     }
 
     // wrapper function to simplify the cache process
-    public boolean getCurrencyCache() {
+    public boolean getCurrencyCache(String apiVersion) {
         try {
-            loadCurrencies();
+            loadCurrencies(apiVersion);
             parseJson();
             return true;
         } catch (Exception e) {

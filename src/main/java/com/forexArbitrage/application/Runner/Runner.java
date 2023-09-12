@@ -4,6 +4,7 @@ import com.forexArbitrage.application.apiAccess.CurrencyAccess;
 import com.forexArbitrage.application.apiAccess.CurrencyModel;
 import com.forexArbitrage.application.apiAccess.ExchangeRates;
 import com.forexArbitrage.application.verification.CurrencyVerifier;
+import com.forexArbitrage.application.verification.PropertyLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,13 +21,19 @@ public class Runner {
     @Autowired
     CurrencyAccess currencyAccess;
 
+    @Autowired
+    PropertyLoader propertyLoader;
+
     private static final Logger logger = Logger.getLogger(Runner.class.getName());
 
 
     public void run() {
         try {
+            // load the properties of the project
+            propertyLoader.loadProperties();
+
             // load the cache of securities
-            currVer.getCurrencyCache();
+            currVer.getCurrencyCache(propertyLoader.getCurrencyKey());
 
             // input currencies (change for later)
             ArrayList<String> triangularCurrencies = new ArrayList<String>() {
@@ -51,7 +58,7 @@ public class Runner {
 
             if (isValid) {
                 // call currency exchange rate api
-                ExchangeRates exchangeRates = currencyAccess.getExchangeRates();
+                ExchangeRates exchangeRates = currencyAccess.getExchangeRates(propertyLoader.getExchangeKey());
 
                 String base = exchangeRates.getBase();
 
@@ -73,11 +80,9 @@ public class Runner {
                 logger.info(triangularCurrencies.get(1) + "/" + triangularCurrencies.get(2) + " exchange rate is " + CurrTwotoCurrThree);
                 logger.info(triangularCurrencies.get(2) + "/" + triangularCurrencies.get(0) + " exchange rate is " + CurrThreetoCurrOne);
 
-                // implement triangular logic
                 Float finalVal = CurrOnetoCurrTwo * CurrTwotoCurrThree * CurrThreetoCurrOne;
 
                 logger.info("Triangluar forex exchange is " + finalVal);
-
             }
 
 

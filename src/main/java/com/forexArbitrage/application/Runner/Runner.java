@@ -1,13 +1,14 @@
 package com.forexArbitrage.application.Runner;
 
 import com.forexArbitrage.application.apiAccess.CurrencyAccess;
-import com.forexArbitrage.application.apiAccess.CurrencyModel;
 import com.forexArbitrage.application.apiAccess.ExchangeRates;
+import com.forexArbitrage.application.triangularModel.TriangularModel;
 import com.forexArbitrage.application.verification.CurrencyVerifier;
 import com.forexArbitrage.application.verification.PropertyLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.awt.datatransfer.FlavorEvent;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.*;
 import java.util.logging.Level;
@@ -23,6 +24,9 @@ public class Runner {
 
     @Autowired
     PropertyLoader propertyLoader;
+
+    @Autowired
+    TriangularModel triangularModel;
 
     private static final Logger logger = Logger.getLogger(Runner.class.getName());
 
@@ -57,30 +61,10 @@ public class Runner {
             }
 
             if (isValid) {
-                // call currency exchange rate api
                 ExchangeRates exchangeRates = currencyAccess.getExchangeRates(propertyLoader.getExchangeKey());
 
-                String base = exchangeRates.getBase();
-
-                ArrayList<CurrencyModel> CurrencyModel = new ArrayList<CurrencyModel>();
-
-                // load exchange rates
-                for (String curr :  triangularCurrencies) {
-                    Float exRate = exchangeRates.getSpecificRate(curr);
-                    triangularExchangeRates.add(exRate);
-                    logger.info(curr + " exchange rate with " +  base + " is " + exRate);
-                }
-
-                // calculate relative exchange rates
-                Float CurrOnetoCurrTwo = (1/ triangularExchangeRates.get(0)) / (1 / triangularExchangeRates.get(1));
-                Float CurrTwotoCurrThree = (1 / triangularExchangeRates.get(1)) / (1 / triangularExchangeRates.get(2));
-                Float CurrThreetoCurrOne = (1 / triangularExchangeRates.get(2)) / (1 / triangularExchangeRates.get(0));
-
-                logger.info(triangularCurrencies.get(0) + "/" + triangularCurrencies.get(1) + " exchange rate is " + CurrOnetoCurrTwo);
-                logger.info(triangularCurrencies.get(1) + "/" + triangularCurrencies.get(2) + " exchange rate is " + CurrTwotoCurrThree);
-                logger.info(triangularCurrencies.get(2) + "/" + triangularCurrencies.get(0) + " exchange rate is " + CurrThreetoCurrOne);
-
-                Float finalVal = CurrOnetoCurrTwo * CurrTwotoCurrThree * CurrThreetoCurrOne;
+                triangularModel.runModel(exchangeRates, "USD", "EUR", "CAD");
+                Float finalVal = triangularModel.getArbitrageValue();
 
                 logger.info("Triangluar forex exchange is " + finalVal);
             }

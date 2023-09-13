@@ -9,6 +9,7 @@ import com.forexArbitrage.application.apiAccess.RestCall;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -75,5 +76,9 @@ public class CurrencyVerifier {
         }
 
         return false;
+    }
+
+    public ArrayList<String> getCurrenciesNameList() {
+        return (ArrayList<String>) currencies.keySet();
     }
 }

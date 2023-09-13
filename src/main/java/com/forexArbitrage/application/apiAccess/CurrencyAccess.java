@@ -17,7 +17,7 @@ public class CurrencyAccess {
     @Autowired
     PropertyLoader propertyLoader;
 
-    private static final Logger logger = Logger.getLogger(CurrencyModel.class.getName());
+    private static final Logger logger = Logger.getLogger(CurrencyAccess.class.getName());
 
     // currency api access here
     private String response;

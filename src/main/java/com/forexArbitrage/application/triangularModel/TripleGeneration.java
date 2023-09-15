@@ -18,7 +18,7 @@ public class TripleGeneration {
     ExchangeRates exchangeRates;
 
     private List<String> currenciesWithExchangeRates = new ArrayList<String>();
-    private List<List<String>> triples = new ArrayList<List<String>>();
+    private List<String[]> triples = new ArrayList<String[]>();
 
     public void generateCurrenciesWithExchangeRates(ExchangeRates exchangeRates) {
         for (String curr : exchangeRates.getRates().keySet()) {
@@ -27,6 +27,42 @@ public class TripleGeneration {
     }
 
     public void generateTriples() {
-        // todo: create triple combination functionality
+        int k = 3;
+        int[] s = new int[3];
+
+        for (int i = 0; (s[i] = i) < 2; i++);
+        triples.add(createSubset(s));
+        for (;;) {
+            int i;
+
+            for (i = 2; i >= 0 && s[i] == i; i--);
+            if (i < 0) {
+                break;
+            }
+            s[i]++;
+            for (++i; i < 3; i++) {
+                s[i] = s[i-1] + 1;
+            }
+            triples.add(createSubset(s));
+        }
+
+    }
+
+
+    private String[] createSubset(int[] subset) {
+        String[] result = new String[3];
+
+        for (int i = 0; i < 3; i++) {
+            result[i] = currenciesWithExchangeRates.get(subset[i]);
+        }
+
+        return result;
+    }
+
+    public List<String[]> getTriples(ExchangeRates exchangeRates) {
+        generateCurrenciesWithExchangeRates(exchangeRates);
+        generateTriples();
+
+        return triples;
     }
 }

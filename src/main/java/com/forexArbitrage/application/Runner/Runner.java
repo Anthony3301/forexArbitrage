@@ -3,6 +3,7 @@ package com.forexArbitrage.application.Runner;
 import com.forexArbitrage.application.apiAccess.CurrencyAccess;
 import com.forexArbitrage.application.apiAccess.ExchangeRates;
 import com.forexArbitrage.application.triangularModel.TriangularModel;
+import com.forexArbitrage.application.triangularModel.TripleGeneration;
 import com.forexArbitrage.application.verification.CurrencyVerifier;
 import com.forexArbitrage.application.verification.PropertyLoader;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class Runner {
 
     @Autowired
     TriangularModel triangularModel;
+
+    @Autowired
+    TripleGeneration tripleGeneration;
 
     private static final Logger logger = Logger.getLogger(Runner.class.getName());
 
@@ -60,8 +64,12 @@ public class Runner {
                 }
             }
 
+
             if (isValid) {
                 ExchangeRates exchangeRates = currencyAccess.getExchangeRates(propertyLoader.getExchangeKey());
+
+                // testing of triple generation
+                logger.info("Generated " + tripleGeneration.getTriples(exchangeRates).size() + " triples");
 
                 triangularModel.runModel(exchangeRates, "USD", "EUR", "CAD");
                 Float finalVal = triangularModel.getArbitrageValue();

@@ -27,37 +27,23 @@ public class TripleGeneration {
     }
 
     public void generateTriples() {
-        int k = 3;
-        int[] s = new int[3];
+        int len = currenciesWithExchangeRates.size();
 
-        for (int i = 0; (s[i] = i) < 2; i++);
-        triples.add(createSubset(s));
-        for (;;) {
-            int i;
+        for (int i = 0; i < len; i++) {
+            for (int j = 0; j < len; j++) {
+                for (int k = 0; k < len; k++) {
+                    if (i != k && i != j && j != k) {
+                        String[] tmp = {currenciesWithExchangeRates.get(i), currenciesWithExchangeRates.get(j), currenciesWithExchangeRates.get(k)};
 
-            for (i = 2; i >= 0 && s[i] == i; i--);
-            if (i < 0) {
-                break;
+                        triples.add(tmp);
+                    }
+                }
             }
-            s[i]++;
-            for (++i; i < 3; i++) {
-                s[i] = s[i-1] + 1;
-            }
-            triples.add(createSubset(s));
         }
-
     }
 
 
-    private String[] createSubset(int[] subset) {
-        String[] result = new String[3];
 
-        for (int i = 0; i < 3; i++) {
-            result[i] = currenciesWithExchangeRates.get(subset[i]);
-        }
-
-        return result;
-    }
 
     public List<String[]> getTriples(ExchangeRates exchangeRates) {
         generateCurrenciesWithExchangeRates(exchangeRates);
